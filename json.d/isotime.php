@@ -1,10 +1,10 @@
 <?php
 $PROFILE['isotime'] = array(
-  "host_tag"=>"hostname",
+  "host_key"=>"hostname",
   "key_prefix"=>"isotime.",
   "skip_keys"=>array("when"),
   "time_key"=>"when",
-  "time_transform"=>function ($val) {
+  "time"=>function ($val) {
     $date = new DateTime($val);
     return $date->getTimestamp();
   }

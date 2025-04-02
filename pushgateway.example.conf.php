@@ -11,17 +11,17 @@ $ZPG["api_token"] = "";
 //Optional: Universal key prefix for all items collected via this gateway.
 $ZPG["key_prefix"] = "";
 
-/* NOTE: The Zabbix Item's key must equal 
- * $ZPG["key_prefix"] . $PROFILE[*]["key_prefix"] . $PUSHED_JSON["key_name"]
+/* The Zabbix item key must include both the 
+ * $ZPG["key_prefix"] and $PROFILE[*]["key_prefix"], if set.
  * Example:
- * $ZPG["key_prefix"] = "zpg_";
- * $PROFILE[*]["key_prefix"] = "json_";
- * $KEY_FROM_JSON = "measurement1";
- * Zabbix Key: zpg_json_measurement1
+ * $ZPG["key_prefix"] = "pushed.";
+ * $PROFILE[*]["key_prefix"] = "device.";
+ * $KEY_FROM_JSON = "metric1";
+ * Zabbix Item Key: pushed.device.metric1
 */
 
 /* JSON ***********************/
-$json_d = 'json.d';
+$json_d = "json.d";
 foreach (scandir($json_d) as $json_profile) {
     include $json_d . '/' . $json_profile;
 }

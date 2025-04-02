@@ -8,7 +8,7 @@ function translate() {
     global $PROFILE;
     $this_profile = $_GET["profile"] ?? "default";
     //Load profile variables as locals
-    $host_tag = $PROFILE[$this_profile]["host_tag"] ?? "hostname";
+    $host_key = $PROFILE[$this_profile]["host_key"] ?? "hostname";
     $skip_keys = $PROFILE[$this_profile]["skip_keys"] ?? array("hostname");
     //Combine universal prefix and profile prefix
     $key_prefix = $ZPG["key_prefix"] ?? "";
@@ -23,13 +23,13 @@ function translate() {
     //Custom processing for timestamps
     $time_key = $PROFILE[$this_profile]["time_key"];
     if (array_key_exists($time_key, $json)) {
-        $timeStamp = $PROFILE[$this_profile]["time_transform"]($json[$time_key]);
+        $timeStamp = $PROFILE[$this_profile]["time"]($json[$time_key]) ?? time();
     } else {
         $timeStamp = time();
     }
 
-    //Match Zabbix {HOST.NAME} via the profile's $host_tag
-    $host = $json[$host_tag];
+    //Match Zabbix {HOST.NAME} via the profile's $host_key
+    $host = $json[$host_key];
 
     //Loop through JSON entries and add to a list
     $list = array();
