@@ -20,17 +20,21 @@ function translate() {
     //Decode the JSON object
     $json = json_decode($endData, true);
 
-    //Convert the ISO date to Unix
-    $date = new DateTime($json["when"]);
-    $timeStamp = $date->getTimestamp();
+    //Custom processing for ISO 8601 Timestamps
+    if (array_key_exists("when", $json)) {
+        $date = new DateTime($json["when"]);
+        $timeStamp = $date->getTimestamp();
+    } else {
+        $timeStamp = time();
+    }
 
-    //Match Zabbix {HOST.NAME} via the JSON's facID entry
+    //Match Zabbix {HOST.NAME} via the profile's $host_tag
     $host = $json[$host_tag];
 
     //Loop through JSON entries and add to a list
     $list = array();
     foreach($json as $key => $value){
-        //Skip the when key (timeStamp)
+        //Omit keys listed in skip_keys
         if (in_array($key, $skip_keys)) {
             continue;
         }
