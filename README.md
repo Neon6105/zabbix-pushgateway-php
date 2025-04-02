@@ -14,14 +14,14 @@ _PHP Edition_
 
 <?php
 $PROFILE["deviceprofile"] = array(
-  "host_tag"=>"hostname",
+  "host_key"=>"hostname",
   "key_prefix"=>"",
   "skip_keys"=>array("hostname"),
 );
 ?>
 ```
 `deviceprofile` must be unique and should match the file name without the '.php' extension  
-`host_tag` is the key from the pushed JSON that contains the technical host name in Zabbix  
+`host_key` is the key from the pushed JSON that contains the technical host name in Zabbix  
 `key_prefix` is a string that will be prefixed to each JSON key before sending it to Zabbix  
 `skip_keys` is an array of strings containing the JSON keys to ignore (will not be sent to Zabbix)  
   
