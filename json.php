@@ -20,10 +20,10 @@ function translate() {
     //Decode the JSON object
     $json = json_decode($endData, true);
 
-    //Custom processing for ISO 8601 Timestamps
-    if (array_key_exists("when", $json)) {
-        $date = new DateTime($json["when"]);
-        $timeStamp = $date->getTimestamp();
+    //Custom processing for timestamps
+    $time_key = $PROFILE[$this_profile]["time_key"];
+    if (array_key_exists($time_key, $json)) {
+        $timeStamp = $PROFILE[$this_profile]["time_transform"]($json[$time_key]);
     } else {
         $timeStamp = time();
     }
