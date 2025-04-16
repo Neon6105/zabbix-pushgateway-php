@@ -1,7 +1,9 @@
 # Zabbix Pushgateway
 PHP Edition
 
-_Get the Flask edition at https://github.com/Neon6105/zabbix-pushgateway-flask_
+_Get the Go edition at https://github.com/Jonny-Burkholder/go-zabbix_  
+_Get the Flask edition at https://github.com/Neon6105/zabbix-pushgateway-flask_  
+  
 ## Installation
 1. Clone this repo to a web server that sits between your push devices and Zabbix (can colo with Zabbix)
 1. Rename `pushgateway.example.conf.php` to `pushgateway.conf.php`
