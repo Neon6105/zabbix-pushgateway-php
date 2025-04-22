@@ -1,29 +1,29 @@
 <?php
 
-include 'pushgateway.conf.php';
+include "config.php";
 
 //Convert POSTed JSON into Zabbix JSON
 function translate() {
     global $ZPG;
     global $PROFILE;
-    $this_profile = $_GET["profile"] ?? "default";
+    $thisProfile = $_GET["profile"] ?? "default";
     //Load profile variables as locals
-    $host_key = $PROFILE[$this_profile]["host_key"] ?? "hostname";
-    $skip_keys = $PROFILE[$this_profile]["skip_keys"] ?? array("hostname");
+    $host_key = $PROFILE[$thisProfile]["host_key"] ?? "host";
+    $skipKey = $PROFILE[$thisProfile]["skipKey"] ?? array("host");
+    $timeKey = $PROFILE[$thisProfile]["timeKey"] ?? "timestamp";
     //Combine universal prefix and profile prefix
-    $key_prefix = $ZPG["key_prefix"] ?? "";
-    $key_prefix .= $PROFILE[$this_profile]["key_prefix"] ?? "";
+    $keyPrefix = $ZPG["universalPrefix"] ?? "";
+    $keyPrefix .= $PROFILE[$thisProfile]["keyPrefix"] ?? "";
 
     //Get JSON data from POST
-    $endData = file_get_contents('php://input');
+    $postData = file_get_contents('php://input');
 
     //Decode the JSON object
-    $json = json_decode($endData, true);
+    $json = json_decode($postData, true);
 
     //Custom processing for timestamps
-    $time_key = $PROFILE[$this_profile]["time_key"];
-    if (array_key_exists($time_key, $json)) {
-        $timeStamp = $PROFILE[$this_profile]["time"]($json[$time_key]) ?? time();
+    if (array_key_exists($timeKey, $json)) {
+        $timeStamp = (new DateTime($json[$timeKey]))->getTimeStamp() ?? time();
     } else {
         $timeStamp = time();
     }
@@ -34,23 +34,21 @@ function translate() {
     //Loop through JSON entries and add to a list
     $list = array();
     foreach($json as $key => $value){
-        //Omit keys listed in skip_keys
-        if (in_array($key, $skip_keys)) {
+        //Omit keys listed in skipKey
+        if (in_array($key, $skipKey)) {
             continue;
         }
     
         //Format each key/value pair for Zabbix API
-        $item = zabbixParamify($host, $key_prefix . $key, (string)$value, $timeStamp);
+        $item = zabbixParamify($host, $keyPrefix . $key, (string)$value, $timeStamp);
 
         //Add to the list if it's not empty
         if($item){
             $list[] = $item;
         }
     } // end foreach($key=>$value)
-
     //Send fully formatted data list Zabbix
     zabbixPush($list);
-
 } // end translate()
 
 
@@ -75,7 +73,7 @@ function zabbixPush(array $list){
     global $ZPG;
 
     //We're sending JSON data using an API token for authorization
-    $headers = ['Content-type: application/json', 'Authorization: Bearer ' . $ZPG['api_token']];
+    $headers = ["Content-type: application/json", "Authorization: Bearer " . $ZPG["apiToken"]];
     
     //Get the current unix timestamp. Used for the transaction ID.
     $dateRaw = new DateTime("now");
@@ -93,7 +91,7 @@ function zabbixPush(array $list){
     $dataObj_json = json_encode($dataObj, JSON_FORCE_OBJECT);
 
     //Perpare and perform the POST request to the Zabbix API using curl
-    $curl = curl_init($ZPG['api_url']);
+    $curl = curl_init($ZPG["apiURL"]);
     
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_POST, true);
