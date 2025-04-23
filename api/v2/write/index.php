@@ -19,8 +19,10 @@ function main() {
       continue;
     }
     // Convert Line Protocol to strings and arrays
-    [$metadata, $fieldset, $clock] = explode(" ", $point);
+    [$metadata, $fieldset, $timestamp] = explode(" ", $point);
     [$measurement, $tags] = explode(",", $metadata, 2);
+    $clock = substr($timestamp, 0, 10);
+    $ns = substr($timestamp, 10, 4);
     $fieldset = bStringToArray($fieldset);
     $tags = bStringToArray($tags);
 
@@ -39,7 +41,7 @@ function main() {
 
     // Paramify the fieldset
     foreach($fieldset as $key=>$val) {
-      $param = zabbixParamify($host, $keyPrefix . $key, $val, $clock);
+      $param = zabbixParamify($host, $keyPrefix . $key, $val, $clock, $ns);
       if ($param) {
         $params[] = $param;
       }
