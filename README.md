@@ -1,54 +1,16 @@
-# Zabbix Pushgateway
-PHP Edition
-
+# Zabbix Pushgateway  
+PHP Edition  
+  
 _Get the Go edition at https://github.com/Jonny-Burkholder/go-zabbix_  
 _Get the Flask edition at https://github.com/Neon6105/zabbix-pushgateway-flask_  
   
-## Installation
-1. Clone this repo to a web server that sits between your push devices and Zabbix (can colo with Zabbix)
-1. Rename `pushgateway.example.conf.php` to `pushgateway.conf.php`
-1. Edit `pushgateway.conf.php` to set the api_url and api_token for Zabbix  
+## Installation  
+1. Clone this repo to a web server that sits between your push devices and Zabbix (can colo with Zabbix)  
+1. Rename `example.config.php` to `config.php`  
+1. Edit `config.php` to set the apiURL and apiToken for Zabbix  
   
-## Device Profiles
-1. For each device type, create a _deviceprofile_.php in `json.d/`
-1. A device profile currently looks like:
-```php
-< json.d/deviceprofile.php >
-
-<?php
-$PROFILE["deviceprofile"] = array(
-  "host_key"=>"hostname",
-  "key_prefix"=>"",
-  "skip_keys"=>array("hostname"),
-);
-?>
-```
-`deviceprofile` must be unique and should match the file name without the '.php' extension  
-`host_key` is the key from the pushed JSON that contains the technical host name in Zabbix  
-`key_prefix` is a string that will be prefixed to each JSON key before sending it to Zabbix  
-`skip_keys` is an array of strings containing the JSON keys to ignore (will not be sent to Zabbix)  
-  
-## Zabbix Setup
-1. Create a new host in Zabbix and set the host name to match the value provided by the `host_tag` key in the pushed JSON
-1. Create an Item for the host for each additional JSON key and set the type to "Zabbix Trapper".  
-  The item key must include the `$ZPG["key_prefix"]` and the `$PROFILE[*]["key_prefix"]`, if set.
-```php
-< pushgateway.conf.php >
-
-...
-$ZPG["key_prefix"] = "pushed.";
-...
-```
-```php
-< json.d/deviceprofile.php >
-
-...
-$PROFILE["deviceprofile"]["key_prefix"] = "device.";
-...
-```
-If the key from the pushed JSON is `metric1` then the Zabbix item key must be "pushed.device.metric1"  
-To omit any portion of the prefix, simply set the value to an empty string  
-
-## Device Setup
-1. Configure your device to push its JSON file to $your_server_url/json.php?profile=deviceprofile
+## Setup
+1. WIP: [Arbitrary CSV](csv/)  
+1. WIP: [InfluxDB](api/v2/write/)  
+1. [Arbitrary JSON](json/)  
   

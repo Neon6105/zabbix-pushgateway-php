@@ -1,0 +1,1 @@
+InfluxDB checks to make sure that /health exists before pushing data to /api/v2/write?org=&bucket=
