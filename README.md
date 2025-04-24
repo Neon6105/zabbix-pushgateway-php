@@ -10,7 +10,12 @@ _Get the Flask edition at https://github.com/Neon6105/zabbix-pushgateway-flask_
 1. Edit `config.php` to set the apiURL and apiToken for Zabbix  
   
 ## Setup
-1. WIP: [Arbitrary CSV](csv/)  
-1. WIP: [InfluxDB](api/v2/write/)  
+1. [Arbitrary CSV](csv/)  
+1. [InfluxDB](api/v2/write/)  
 1. [Arbitrary JSON](json/)  
   
+## Zabbix Setup
+1. Create a host in Zabbix and set the Host name to match the value provided by the push device and method   
+1. Create items for each piece of information that Zabbix will track, including optional prefixes (if used)  
+  
+For detailed setup directions, please consult the [wiki](https://github.com/Neon6105/zabbix-pushgateway-php/wiki/)
