@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Zabbix Pushgateway Debugger</title>
+  <title>ZPG Debugger</title>
   <style>
     html, body, input, select, textarea {
       background-color: #1e1e1e;
@@ -12,13 +12,7 @@
 </head>
 <body>
 
-<?php
-  require 'functions.php';
-  include 'csv/csv.php';
-  include 'csv/csvprofiles.php';
-  include 'json/json.php';
-  include 'json/jsonprofiles.php';
-?>
+<?php require 'functions.php'; ?>
 
 <?php
 echo "Zabbix API: ". $ZPG["apiURL"] . "<br />";
@@ -66,13 +60,15 @@ echo "Pushgateway: " . $serverURL;
     <select name="csvprofile" id="csvprofile">
         <option value="">None (default)</option>
       <?php
-      foreach ($PROFILE as $k=>$v) {
+      foreach ($CSVPROFILE as $k=>$v) {
         echo '<option value="' . $k . '">' . $k . '</option>';
       }
       ?>
-    </select>
-    <label for="csvupload">CSV: </label>
-    <input type="file" id="csvupload" name="csvupload" accept="text/csv" />
+    </select><br /><br />
+    <textarea id="csvupload" name="csvupload" rows="8" cols="48" />
+host,metric,value,timestamp
+zabbix,key.name,42,<?php echo date('c'); ?>
+    </textarea>
   </div>
 
   <div id="influxdetails" name="influxdetials" style="display:none;">
@@ -97,7 +93,6 @@ echo "Pushgateway: " . $serverURL;
       }
       ?>
     </select><br /><br />
-    <!--label for="jsonupload">JSON: </label-->
     <textarea id="jsonupload" name="jsonupload" rows="8" cols="48" />
 {
     "host": "zabbix",
