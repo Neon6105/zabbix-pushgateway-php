@@ -6,6 +6,7 @@ require '../functions.php';
 function main() {
     $params = array();
 
+    // Load data from POST, decode JSON to array
     $postData = file_get_contents("php://input");
     $json = json_decode($postData, true);
 
@@ -22,6 +23,7 @@ function main() {
         die('Host data not found but is required for history.push');
     }
 
+    // Process each key/value pair to send to Zabbix
     foreach ($json as $key=>$val) {
         if (in_array($key, $skipKey)) {
             continue;

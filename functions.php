@@ -20,6 +20,7 @@ foreach ($modules as $module) {
   }
 }
 
+// Return an array formatted for Zabbix "params" in history.push
 function zabbixParamify($host, $key, $val=0, $clock=null, $ns=0) {
   if ($host && $key && $clock) {
       return array(
@@ -35,6 +36,7 @@ function zabbixParamify($host, $key, $val=0, $clock=null, $ns=0) {
 }  // end zabbixAddParam()
 
 
+// Load "params" into the formatted JSON then send it to the Zabbix API
 function zabbixHistoryPush(array $params) {
   global $ZPG;
 

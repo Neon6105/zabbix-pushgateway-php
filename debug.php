@@ -21,8 +21,8 @@ echo "Pushgateway: " . $serverURL;
 ?>
 
 <script language="javascript">
+    // Whenever the pushMethod changes, show/hide the relevant divs
     function getPushDetails(pushMethod) {
-        //var pushMethod = document.getElementById('pushMethod').value;
         document.getElementById("apidetails").style.display = "none";
         document.getElementById("csvdetails").style.display = "none";
         document.getElementById("influxdetails").style.display = "none";
@@ -40,6 +40,7 @@ echo "Pushgateway: " . $serverURL;
     <option value="json">JSON line format</option>
   </select></p>
 
+  <!-- Direct access (no method) -------------->
   <div id="apidetails" name="apidetails">
     <table>
     <tr>
@@ -55,6 +56,7 @@ echo "Pushgateway: " . $serverURL;
     </table>
   </div>
 
+  <!-- CSV ------------------------------------>
   <div id="csvdetails" name="csvdetails" style="display:none;">
     <label for="csvprofle">Profile: </label>
     <select name="csvprofile" id="csvprofile">
@@ -70,6 +72,7 @@ host,metric1,metric2,metric3,time
 zabbix,42,potato,99,<?php echo trim(date('c')); ?></textarea>
   </div>
 
+  <!-- InfluxDB line protocol ----------------->
   <div id="influxdetails" name="influxdetials" style="display:none;">
     <p>Use measurement prefix?
       <input type="radio" name="useMeasurementPrefix" value="true" id="influxprefixtrue">
@@ -82,6 +85,7 @@ zabbix,42,potato,99,<?php echo trim(date('c')); ?></textarea>
     </p>
   </div>
 
+  <!-- JSON line format ----------------------->
   <div id="jsondetails" name="jsondetails"  style="display:none;">
     <label for="jsonprofle">Profile: </label>
     <select name="jsonprofile" id="jsonprofile">
@@ -104,11 +108,13 @@ zabbix,42,potato,99,<?php echo trim(date('c')); ?></textarea>
 <input type="submit">
 </form>
 
+<!-- POST magic -->
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $how = $_POST['pushMethod'];
     echo "<br /><br />";
     switch ($how) {
+
         case 'csv':
             $useMethod = 'CSV';
             $modpath = '/csv/';
@@ -151,13 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     echo 'Method: ' . $useMethod . "<br />";
     if (isset($modpath)) {
+        // CSV, InfluxDB, and JSON
         echo 'URL: ' . $serverURL . $modpath . '<br />';
         echo 'Data: ' . $data . '<br />';
         echo '<br />';
         $curl = curl_init($serverURL . $modpath);
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        //curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -168,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         var_dump($result);
     } else {
+        // Direct (no method)
         $host = $_POST['zabbixHost'] != '' ? $_POST['zabbixHost'] : 'zabbix';
         $key = $_POST['zabbixKey'] != '' ? $_POST['zabbixKey'] : 'key.name';
         $val = $_POST['zabbixVal'] != '' ? $_POST['zabbixVal'] : '42';
