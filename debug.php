@@ -66,9 +66,8 @@ echo "Pushgateway: " . $serverURL;
       ?>
     </select><br /><br />
     <textarea id="csvupload" name="csvupload" rows="8" cols="48" />
-host,metric,value,timestamp
-zabbix,key.name,42,<?php echo date('c'); ?>
-    </textarea>
+host,metric1,metric2,metric3,time
+zabbix,42,potato,99,<?php echo trim(date('c')); ?></textarea>
   </div>
 
   <div id="influxdetails" name="influxdetials" style="display:none;">
@@ -118,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $modpath .= '?profile=' . $csvprofile;
             }
             $headers = ['Content-type: text/csv'];
-            $data = ''; //GET CSV FROM POST
+            $data = $_POST['csvupload'];
             break;
 
         case 'influx':

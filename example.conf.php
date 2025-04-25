@@ -17,4 +17,12 @@ $JSONPROFILE['default'] = array(
     'keyPrefix' => ''
 );
 
+$CSVPROFILE['default'] = array(
+    'hasHeader'  => true,
+    'useHeader'  => array('host','key','value','timestamp'),
+    'hostColumn' => 'host',
+    'skipColumn' => array('host', 'time'),
+    'timeColumn' => 'time'
+);
+
 ?>
