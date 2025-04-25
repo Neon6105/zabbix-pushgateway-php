@@ -3,7 +3,7 @@
 <head>
   <title>Zabbix Pushgateway Debugger</title>
   <style>
-    html, body, input, select {
+    html, body, input, select, textarea {
       background-color: #1e1e1e;
       color: #ffffff;
       font-family: monospace;
@@ -27,84 +27,105 @@ echo "Pushgateway: " . $serverURL;
 ?>
 
 <script language="javascript">
-    function getPushDetails() {
-        var pushMethod = document.getElementById('pushMethod').value;
-        document.getElementById('csvdetails').style.display = "none";
-        document.getElementById('influxdetails').style.display = "none";
-        document.getElementById('influxdetails1').style.display = "none";
-        document.getElementById('jsondetails').style.display = "none";
-        document.getElementById(pushMethod + 'details').style.display = "block";
-        document.getElementById(pushMethod + 'details1').style.display = "block";
+    function getPushDetails(pushMethod) {
+        //var pushMethod = document.getElementById('pushMethod').value;
+        document.getElementById("apidetails").style.display = "none";
+        document.getElementById("csvdetails").style.display = "none";
+        document.getElementById("influxdetails").style.display = "none";
+        document.getElementById("jsondetails").style.display = "none";
+        document.getElementById(pushMethod + "details").style.display = "block";
     }
 </script>
 
 <form method="post">
-<table>
-  <tr>
-    <td><label for="zabbixHost">Host: </label></td>
-    <td><input type="text" id="zabbixHost" name="zabbixHost" required placeholder="zabbix" size=32 /></td>
-  </tr><tr>
-    <td><label for="zabbixKey">Key: </label></td>
-    <td><input type="text" id="zabbixKey" name="zabbixKey" required placeholder="key.name" size=32 /></td>
-  </tr><tr>
-    <td><label for="zabbixVal">Value: </label></td>
-    <td><input type="text" id="zabbixVal" name="zabbixVal" required placeholder="42" size=32/></td>
-  </tr><tr>
-    <td><label for="pushMethod">Method: </label></td>
-    <td>
-      <select name="pushMethod" id="pushMethod" required onChange="getPushDetails()">
-        <option value="direct">Direct (no method)</option>
-        <option value="csv">CSV</option>
-        <option value="influx">InfluxDB line protocol</option>
-        <option value="json">JSON line format</option>
-      </select>
-    </td>
-  </tr>
-</table>
-<table>
-  <tr name="csvdetails" id="csvdetails" style="display:none;">
-    <td>CSV</td><td>???</td>
-  </tr>
-  <tr name="influxdetails" id="influxdetails" style="display:none;">
-    <td>Use measurement prefix?</td>
-    <td>
-        <input type="radio" name="useMeasurementPrefix" value="true" id="influxprefixtrue">
-        <label for="influxprefixtrue">Yes</label>
-        <input type="radio" name="useMeasurementPrefix" value="false" id="influxprefixfalse" checked>
-        <label for="influxprefixfalse">No</label>
-    </td>
-  </tr>
-  <tr name="influxdetails1" id="influxdetails1" style="display:none;">
-    <td><label for="measurementPrefix">Measurement: </label></td>
-    <td><td><input type="text" id="measurementPrefix" name="measurementPrefix" placeholder="testdata" size=24/></td>
-  </tr>
-  <tr name="jsondetails" id="jsondetails" style="display:none;">
-    <td><label for="jsonprofile">JSON Profile: </label></td>
-    <td><input type="text" id="jsonprofile" name="jsonprofile" placeholder="default" /></td>
-  </tr>
-  <tr><td colspan=2><br /></td></tr>
-</table>
+  <p><label for="pushMethod">Method: </label>
+  <select name="pushMethod" id="pushMethod" required onChange="getPushDetails(this.value)">
+    <option value="api">Direct (no method)</option>
+    <option value="csv">CSV</option>
+    <option value="influx">InfluxDB line protocol</option>
+    <option value="json">JSON line format</option>
+  </select></p>
+
+  <div id="apidetails" name="apidetails">
+    <table>
+    <tr>
+      <td><label for="zabbixHost">Host: </label></td>
+      <td><input type="text" id="zabbixHost" name="zabbixHost" placeholder="zabbix" size=32 /></td>
+    </tr><tr>
+      <td><label for="zabbixKey">Key: </label></td>
+      <td><input type="text" id="zabbixKey" name="zabbixKey" placeholder="key.name" size=32 /></td>
+    </tr><tr>
+      <td><label for="zabbixVal">Value: </label></td>
+      <td><input type="text" id="zabbixVal" name="zabbixVal" placeholder="42" size=32/></td>
+    </tr>
+    </table>
+  </div>
+
+  <div id="csvdetails" name="csvdetails" style="display:none;">
+    <label for="csvprofle">Profile: </label>
+    <select name="csvprofile" id="csvprofile">
+        <option value="">None (default)</option>
+      <?php
+      foreach ($PROFILE as $k=>$v) {
+        echo '<option value="' . $k . '">' . $k . '</option>';
+      }
+      ?>
+    </select>
+    <label for="csvupload">CSV: </label>
+    <input type="file" id="csvupload" name="csvupload" accept="text/csv" />
+  </div>
+
+  <div id="influxdetails" name="influxdetials" style="display:none;">
+    <p>Use measurement prefix?
+      <input type="radio" name="useMeasurementPrefix" value="true" id="influxprefixtrue">
+      <label for="influxprefixtrue">Yes</label>
+      <input type="radio" name="useMeasurementPrefix" value="false" id="influxprefixfalse" checked>
+      <label for="influxprefixfalse">No</label>
+    </p><p>
+      <label for="influxdatapoint">Data Point: </label>
+      <input type="text" id="influxdatapoint" name="influxdatapoint" placeholder="testdata,host=zabbix key=value <?php echo floor(microtime(true) * 1000) ?>" size=48/>
+    </p>
+  </div>
+
+  <div id="jsondetails" name="jsondetails"  style="display:none;">
+    <label for="jsonprofle">Profile: </label>
+    <select name="jsonprofile" id="jsonprofile">
+        <option value="">None (default)</option>
+      <?php
+      foreach ($JSONPROFILE as $k=>$v) {
+        echo '<option value="' . $k . '">' . $k . '</option>';
+      }
+      ?>
+    </select><br /><br />
+    <!--label for="jsonupload">JSON: </label-->
+    <textarea id="jsonupload" name="jsonupload" rows="8" cols="48" />
+{
+    "host": "zabbix",
+    "key.name": "42",
+    "timestamp": "<?php echo date('c'); ?>"
+}
+    </textarea>
+  </div>
+<br />
 <input type="submit">
 </form>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $host = $_POST['zabbixHost'];
-    $key = $_POST['zabbixKey'];
-    $val = $_POST['zabbixVal'];
     $how = $_POST['pushMethod'];
-
-    $params = zabbixParamify($host, $key, $val, time());
-    echo "<br /><br />Received parameters:<br />";
-    var_dump($params);
     echo "<br /><br />";
-
     switch ($how) {
         case 'csv':
             $useMethod = 'CSV';
-            $modpath = '/csv';
+            $modpath = '/csv/';
+            $csvprofile = $_POST['csvprofile'];
+            if ($csvprofile) {
+                $modpath .= '?profile=' . $csvprofile;
+            }
             $headers = ['Content-type: text/csv'];
+            $data = ''; //GET CSV FROM POST
             break;
+
         case 'influx':
             $useMethod = 'InfluxDB line protocol';
             $modpath = '/api/v2/write';
@@ -112,29 +133,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $modpath .= '?org=profile&bucket=measurement';
             }
             $headers = ['Content-type: application/octet-stream'];
-            if ($_POST['measurementPrefix']) {
-                $data = $_POST['measurementPrefix'];
+            if ($_POST['influxdatapoint']) {
+                $data = $_POST['influxdatapoint'];
             } else {
-                $data = "testdata";
+                $data = "testdata,host=zabbix key=value " . floor(microtime(true) * 1000);
             }
-            $data .= ",host=$host $key=$val " . floor(microtime(true) * 1000);
             break;
+
         case 'json':
             $useMethod = 'JSON line format';
             $modpath = '/json/';
-            if ($_POST['jsonprofile']) {
-                $modpath .= '?profile=' . $_POST['jsonprofile'];
-                $profile = $_POST['jsonprofile'];
-            } else {
-                $profile = 'default';
+            $jsonprofile = $_POST['jsonprofile'];
+            if ($jsonprofile) {
+                $modpath .= '?profile=' . $jsonprofile;
             }
             $headers = ['Content-type: application/json'];
-            $data = json_encode(array(
-                $PROFILE[$profile]['hostKey']=>$host,
-                $key=>$val,
-                $PROFILE[$profile]['timekey']=>time()
-            ), JSON_FORCE_OBJECT);
+            $data = $_POST['jsonupload'];
             break;
+
         default:
             $useMethod = 'Direct';
             break;
@@ -158,6 +174,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         var_dump($result);
     } else {
+        $host = $_POST['zabbixHost'] != '' ? $_POST['zabbixHost'] : 'zabbix';
+        $key = $_POST['zabbixKey'] != '' ? $_POST['zabbixKey'] : 'key.name';
+        $val = $_POST['zabbixVal'] != '' ? $_POST['zabbixVal'] : '42';
+        $params = zabbixParamify($host, $key, $val, time());
+        echo "Received parameters:<br />";
+        var_dump($params);
+        echo "<br /><br />";
+        echo "<br />";
         zabbixHistoryPush($params);
     }
 }

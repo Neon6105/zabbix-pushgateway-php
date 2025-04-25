@@ -10,7 +10,7 @@ $ZPG['apiToken'] = '';
 $ZPG['universalPrefix'] = '';
 
 //Optional: Set fallback defaults for JSON profile processing
-$PROFILE['default'] = array(
+$JSONPROFILE['default'] = array(
     'hostKey'   => 'host',
     'skipKey'   => array('host', 'timestamp'),
     'timeKey'   => 'timestamp',

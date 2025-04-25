@@ -7,7 +7,6 @@ define('DIR_SEP', DIRECTORY_SEPARATOR);
 require join(DIR_SEP, array(ABSPATH, 'config.php'));
 
 // include functions.php from each module
-// Maybe reverse this and have each "inner" function.php include this one?
 $modules = array(
   join(DIR_SEP, array(ABSPATH, 'api', 'v2', 'write')),
   join(DIR_SEP, array(ABSPATH, 'csv')),

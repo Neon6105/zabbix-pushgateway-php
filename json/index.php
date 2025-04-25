@@ -1,11 +1,6 @@
 <?php
 
 require '../functions.php';
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'json.php';
-$jsonprofiles = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'jsonprofiles.php';
-if (is_file($jsonprofiles)) {
-    include $jsonprofiles;
-}
 
 // Convert arbitrary JSON into Zabbix JSON
 function main() {

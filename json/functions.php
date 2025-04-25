@@ -1,18 +1,24 @@
 <?php
 
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'json.php';
+$jsonprofiles = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'jsonprofiles.php';
+if (is_file($jsonprofiles)) {
+    include $jsonprofiles;
+}
+
 function getJsonProfile() {
-  global $PROFILE;
-  $profile = $_GET['profile'] ?? 'default';
-  $hostKey = $PROFILE[$profile]['hostKey'] ?? $PROFILE['default']['hostKey'] ?? 'host';
-  $skipKey = $PROFILE[$profile]['skipKey'] ?? $PROFILE['default']['skipKey'] ?? array();
-  $timeKey = $PROFILE[$profile]['timeKey'] ?? $PROFILE['default']['timeKey'] ?? 'timeStamp';
-  $keyPrefix = $PROFILE[$profile]['keyPrefix'] ?? $PROFILE['default']['keyPrefix'] ?? '';
-  return array(
-    'hostKey' => $hostKey,
-    'skipKey' => $skipKey,
-    'timeKey' => $timeKey,
-    'keyPrefix' => $keyPrefix
-  );
+    global $JSONPROFILE;
+    $profile = $_GET['profile'] ?? 'default';
+    $hostKey = $JSONPROFILE[$profile]['hostKey'] ?? $JSONPROFILE['default']['hostKey'] ?? 'host';
+    $skipKey = $JSONPROFILE[$profile]['skipKey'] ?? $JSONPROFILE['default']['skipKey'] ?? array();
+    $timeKey = $JSONPROFILE[$profile]['timeKey'] ?? $JSONPROFILE['default']['timeKey'] ?? 'timeStamp';
+    $keyPrefix = $JSONPROFILE[$profile]['keyPrefix'] ?? $JSONPROFILE['default']['keyPrefix'] ?? '';
+    return array(
+        'hostKey' => $hostKey,
+        'skipKey' => $skipKey,
+        'timeKey' => $timeKey,
+        'keyPrefix' => $keyPrefix
+    );
 }
 
 ?>
